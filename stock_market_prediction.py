@@ -6,7 +6,15 @@ from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import LSTM, Dropout, Dense
 import tensorflow as tf
+from dash import Dash, dcc, html
+import plotly.graph_objs as go
+from dash.dependencies import Input, Output, State
+from sklearn.metrics import mean_squared_error
 
+
+
+app = Dash()
+server = app.server
 
 # read the dataset
 dataset_train = pd.read_csv('google_stock_price.csv')
@@ -73,6 +81,12 @@ X_test = np.reshape(X_test,(X_test.shape[0], X_test.shape[1],1))
 predicted_stock_price=lstm_model.predict(X_test)
 predicted_stock_price=scaler.inverse_transform(predicted_stock_price)
 
+# Calculate the accuracy score
+mse = mean_squared_error(valid_data, predicted_stock_price)
+print("Mean Squared Error: ", mse)
+
+
+
 #save the model
 lstm_model.save("saved_model.h5")
 
@@ -94,12 +108,3 @@ plt.xticks(np.arange(0, len(dataset_train), step=300), rotation=45)
 plt.legend()
 plt.show()
 
-
-
-# plt.plot(dataset_test[-len(valid_data):], color='red', label='Actual Google Stock Price')
-# plt.plot(predicted_stock_price, color='blue', label='Predicted Google Stock Price')
-# plt.title('Google Stock Price Prediction')
-# plt.xlabel('Time')
-# plt.ylabel('Google Stock Price')
-# plt.legend()
-# plt.show()
