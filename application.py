@@ -10,9 +10,10 @@ import plotly.graph_objs as go
 from dash.dependencies import Input, Output, State
 from keras.models import load_model
 
-
-app = Dash()
-server = app.server
+# app = Dash()
+# server = app.server
+app = Dash(__name__)
+application = app.server
 
 def prepare_data_and_model(stock_csv, model_path):
     df = pd.read_csv(stock_csv)
@@ -170,4 +171,5 @@ app.layout = html.Div([
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    application.run(host='0.0.0.0', port='8080')
+    # app.run_server(debug=True)
